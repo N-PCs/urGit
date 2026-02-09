@@ -7,119 +7,12 @@ import { ProfileData, Theme, GitHubStats } from './types';
 import { THEMES, TEMPLATES, INITIAL_PROFILE_DATA, SKILL_OPTIONS } from './constants';
 import { generateMarkdown } from './services/markdownGenerator';
 
-const GitStatsDashboard: React.FC<{ github: string; name: string; location: string; theme: Theme }> = ({ github, name, location, theme }) => {
-  const stats: GitHubStats = {
-    totalStars: 5,
-    totalCommits: 1068,
-    totalPRs: 15,
-    totalIssues: 40,
-    contributedTo: 21,
-    rating: 'B-',
-    currentStreak: 40,
-    longestStreak: 97,
-    totalContributions: 1120,
-    topLanguages: [
-      { name: 'TypeScript', color: '#3178c6', percentage: 16.6 },
-      { name: 'Python', color: '#3572A5', percentage: 7.2 },
-      { name: 'Java', color: '#b07219', percentage: 5.7 },
-      { name: 'C++', color: '#f34b7d', percentage: 4.1 },
-      { name: 'PHP', color: '#4F5D95', percentage: 3.4 },
-      { name: 'JavaScript', color: '#f1e05a', percentage: 6.0 },
-    ]
-  };
-
-  return (
-    <div className="space-y-6 animate-in fade-in duration-700" style={{ color: theme.text }}>
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-black tracking-tight" style={{ color: theme.primary }}>{github}</h2>
-        <p className="text-sm font-medium opacity-60">{name}</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 text-sm">
-            <Zap size={16} className="text-orange-500 fill-orange-500" />
-            <span>{stats.totalCommits.toLocaleString()} contributions in the last 12 months</span>
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <LayoutGrid size={16} className="text-blue-500" />
-            <span>28 public repositories</span>
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <Heart size={16} className="text-rose-500" />
-            <span>Joined GitHub 1 year ago</span>
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <MapPin size={16} className="text-emerald-500" />
-            <span>{location}</span>
-          </div>
-        </div>
-
-        <div className="h-24 rounded-2xl border flex items-end justify-between px-4 py-2" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
-           {[30, 45, 25, 60, 40, 75, 50, 85, 30, 20].map((h, i) => (
-             <div key={i} className="w-4 bg-blue-500/40 rounded-t-sm" style={{ height: `${h}%` }}></div>
-           ))}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="p-6 rounded-3xl border relative" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
-          <div className="flex items-center justify-between mb-6">
-            <h4 className="text-sm font-black uppercase tracking-wider flex items-center gap-2" style={{ color: theme.primary }}>
-              <BarChart3 size={16} /> GitHub Stats
-            </h4>
-            <div className="w-12 h-12 rounded-full border-4 border-blue-500/30 flex items-center justify-center text-lg font-black" style={{ color: theme.primary }}>{stats.rating}</div>
-          </div>
-          <div className="space-y-3 text-xs font-bold opacity-80">
-            <div className="flex justify-between"><span>Total Stars Earned</span> <span>{stats.totalStars}</span></div>
-            <div className="flex justify-between"><span>Contributions (12mo)</span> <span>{stats.totalCommits}</span></div>
-            <div className="flex justify-between"><span>Pull Requests (12mo)</span> <span>{stats.totalPRs}</span></div>
-            <div className="flex justify-between"><span>Issues (12mo)</span> <span>{stats.totalIssues}</span></div>
-            <div className="flex justify-between"><span>Contributed To (12mo)</span> <span>{stats.contributedTo}</span></div>
-          </div>
-        </div>
-
-        <div className="p-6 rounded-3xl border" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
-          <h4 className="text-sm font-black uppercase tracking-wider mb-6 flex items-center gap-2" style={{ color: theme.primary }}>
-            <Code size={16} /> Most Used Languages
-          </h4>
-          <div className="w-full h-3 rounded-full overflow-hidden flex mb-4">
-            {stats.topLanguages.map((lang, i) => (
-              <div key={i} style={{ width: `${lang.percentage * 3}%`, backgroundColor: lang.color }}></div>
-            ))}
-          </div>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[10px] font-bold">
-            {stats.topLanguages.map((lang, i) => (
-              <div key={i} className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: lang.color }}></div>
-                  <span>{lang.name}</span>
-                </div>
-                <span className="opacity-60">{lang.percentage}%</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4">
-        <div className="p-5 rounded-3xl border text-center space-y-1" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
-          <div className="text-2xl font-black text-blue-500">{stats.totalContributions.toLocaleString()}</div>
-          <div className="text-[10px] uppercase font-black opacity-40">Total Contributions</div>
-        </div>
-        <div className="p-5 rounded-3xl border text-center space-y-1 relative" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
-          <div className="absolute top-2 left-1/2 -translate-x-1/2"><Zap size={14} className="text-orange-500" /></div>
-          <div className="text-2xl font-black text-orange-500 pt-2">{stats.currentStreak}</div>
-          <div className="text-[10px] uppercase font-black opacity-40">Current Streak</div>
-        </div>
-        <div className="p-5 rounded-3xl border text-center space-y-1" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
-          <div className="text-2xl font-black text-emerald-500">{stats.longestStreak}</div>
-          <div className="text-[10px] uppercase font-black opacity-40">Longest Streak</div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { fetchGitHubStats } from './services/githubService';
+import { 
+  StandardPreview, MinimalPreview, StatsHeavyPreview, CreativePreview, 
+  CompactPreview, AcademicPreview, DeveloperPreview, DarkElegantPreview, 
+  CommunityPreview 
+} from './components/TemplatePreviews';
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -128,6 +21,8 @@ const App: React.FC = () => {
   const [profileData, setProfileData] = useState<ProfileData>(INITIAL_PROFILE_DATA);
   const [selectedTemplate, setSelectedTemplate] = useState<string>(TEMPLATES[0].id);
   const [selectedTheme, setSelectedTheme] = useState<Theme>(THEMES[0]);
+  const [apiStats, setApiStats] = useState<GitHubStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   
   const [themeDrawerOpen, setThemeDrawerOpen] = useState(false);
@@ -148,6 +43,20 @@ const App: React.FC = () => {
     }
   }, [isDark]);
   useEffect(() => {
+    const fetchStats = async () => {
+      if (profileData.github) {
+        setStatsLoading(true);
+        const stats = await fetchGitHubStats(profileData.github);
+        setApiStats(stats);
+        setStatsLoading(false);
+      }
+    };
+
+    const debounce = setTimeout(fetchStats, 1000);
+    return () => clearTimeout(debounce);
+  }, [profileData.github]);
+
+  useEffect(() => {
     const themeMap: Record<string, string> = {
       'github-dark': 'dark',
       'dracula': 'dracula',
@@ -160,6 +69,21 @@ const App: React.FC = () => {
     };
     updateProfile('statsTheme', themeMap[selectedTheme.id] || 'dark');
   }, [selectedTheme]);
+
+  const PreviewComponent = useMemo(() => {
+    const props = { profileData, githubStats: apiStats, theme: selectedTheme };
+    switch (selectedTemplate) {
+      case 'minimal': return <MinimalPreview {...props} />;
+      case 'stats-heavy': return <StatsHeavyPreview {...props} />;
+      case 'creative': return <CreativePreview {...props} />;
+      case 'compact': return <CompactPreview {...props} />;
+      case 'academic': return <AcademicPreview {...props} />;
+      case 'developer-focused': return <DeveloperPreview {...props} />;
+      case 'dark-elegant': return <DarkElegantPreview {...props} />;
+      case 'community-leader': return <CommunityPreview {...props} />;
+      default: return <StandardPreview {...props} />;
+    }
+  }, [selectedTemplate, profileData, apiStats, selectedTheme]);
 
   const markdown = useMemo(() => {
     return generateMarkdown(profileData, selectedTemplate);
@@ -398,8 +322,16 @@ const App: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="p-12 md:p-16 max-h-[800px] overflow-y-auto transition-all duration-700 custom-scrollbar" style={{ backgroundColor: selectedTheme.background }}>
-                  <GitStatsDashboard github={profileData.github || 'Username'} name={profileData.name || 'Full Name'} location={profileData.location || 'Location'} theme={selectedTheme} />
+                <div className="p-12 md:p-16 max-h-[800px] overflow-y-auto transition-all duration-700 custom-scrollbar relative" style={{ backgroundColor: selectedTheme.background }}>
+                  {statsLoading && (
+                    <div className="absolute inset-0 z-10 bg-black/5 backdrop-blur-[2px] flex items-center justify-center">
+                       <div className="flex flex-col items-center gap-4">
+                          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-blue-500">Syncing GitHub Data...</span>
+                       </div>
+                    </div>
+                  )}
+                  {PreviewComponent}
                   
                   <div className="mt-16 pt-16 border-t border-dashed" style={{ borderColor: `${selectedTheme.secondary}33` }}>
                     <h3 className="text-center text-xs font-black uppercase tracking-[0.3em] mb-10 opacity-30" style={{ color: selectedTheme.text }}>Technologies Highlight</h3>
