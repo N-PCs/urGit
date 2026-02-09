@@ -19,6 +19,9 @@ export const TEMPLATES: Template[] = [
   { id: 'creative', name: 'Creative Coder', description: 'Bold typography and dynamic layout.', previewImage: 'https://images.unsplash.com/photo-1550439062-609e1531270e?auto=format&fit=crop&q=80&w=400&h=250' },
   { id: 'compact', name: 'Quick Glance', description: 'Everything packed in a compact view.', previewImage: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=400&h=250' },
   { id: 'academic', name: 'Academic/Researcher', description: 'Focused on publications and projects.', previewImage: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=400&h=250' },
+  { id: 'developer-focused', name: 'Developer Pro', description: 'Focused on projects, skills and daily coding.', previewImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=400&h=250' },
+  { id: 'dark-elegant', name: 'Dark Elegant', description: 'High contrast, sleek and professional.', previewImage: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=400&h=250' },
+  { id: 'community-leader', name: 'Open Source Leader', description: 'Emphasizes community contributions and reach.', previewImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=400&h=250' },
 ];
 
 export const INITIAL_PROFILE_DATA: ProfileData = {

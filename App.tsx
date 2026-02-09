@@ -7,7 +7,7 @@ import { ProfileData, Theme, GitHubStats } from './types';
 import { THEMES, TEMPLATES, INITIAL_PROFILE_DATA, SKILL_OPTIONS } from './constants';
 import { generateMarkdown } from './services/markdownGenerator';
 
-const GitStatsDashboard: React.FC<{ github: string; theme: Theme }> = ({ github, theme }) => {
+const GitStatsDashboard: React.FC<{ github: string; name: string; location: string; theme: Theme }> = ({ github, name, location, theme }) => {
   const stats: GitHubStats = {
     totalStars: 5,
     totalCommits: 1068,
@@ -32,7 +32,7 @@ const GitStatsDashboard: React.FC<{ github: string; theme: Theme }> = ({ github,
     <div className="space-y-6 animate-in fade-in duration-700" style={{ color: theme.text }}>
       <div className="text-center space-y-2">
         <h2 className="text-3xl font-black tracking-tight" style={{ color: theme.primary }}>{github}</h2>
-        <p className="text-sm font-medium opacity-60">Neel Pandey</p>
+        <p className="text-sm font-medium opacity-60">{name}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -51,7 +51,7 @@ const GitStatsDashboard: React.FC<{ github: string; theme: Theme }> = ({ github,
           </div>
           <div className="flex items-center gap-3 text-sm">
             <MapPin size={16} className="text-emerald-500" />
-            <span>India</span>
+            <span>{location}</span>
           </div>
         </div>
 
@@ -147,6 +147,19 @@ const App: React.FC = () => {
       document.documentElement.classList.remove('dark');
     }
   }, [isDark]);
+  useEffect(() => {
+    const themeMap: Record<string, string> = {
+      'github-dark': 'dark',
+      'dracula': 'dracula',
+      'nord': 'nord',
+      'tokyo-night': 'tokyonight',
+      'one-dark': 'onedark',
+      'monokai': 'monokai',
+      'cyberpunk': 'cyberpunk',
+      'github-light': 'light'
+    };
+    updateProfile('statsTheme', themeMap[selectedTheme.id] || 'dark');
+  }, [selectedTheme]);
 
   const markdown = useMemo(() => {
     return generateMarkdown(profileData, selectedTemplate);
@@ -386,7 +399,7 @@ const App: React.FC = () => {
                 </div>
 
                 <div className="p-12 md:p-16 max-h-[800px] overflow-y-auto transition-all duration-700 custom-scrollbar" style={{ backgroundColor: selectedTheme.background }}>
-                  <GitStatsDashboard github={profileData.github || 'Username'} theme={selectedTheme} />
+                  <GitStatsDashboard github={profileData.github || 'Username'} name={profileData.name || 'Full Name'} location={profileData.location || 'Location'} theme={selectedTheme} />
                   
                   <div className="mt-16 pt-16 border-t border-dashed" style={{ borderColor: `${selectedTheme.secondary}33` }}>
                     <h3 className="text-center text-xs font-black uppercase tracking-[0.3em] mb-10 opacity-30" style={{ color: selectedTheme.text }}>Technologies Highlight</h3>

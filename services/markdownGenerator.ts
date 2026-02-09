@@ -3,8 +3,7 @@ import { ProfileData } from '../types';
 
 export const generateMarkdown = (data: ProfileData, templateId: string): string => {
   const skillsString = data.skills.join(',');
-  const statsThemeParam = data.statsTheme === 'light' ? '&theme=light' : '&theme=dark';
-  
+
   const skillsBadge = `<p align="left">\n  <a href="https://skillicons.dev">\n    <img src="https://skillicons.dev/icons?i=${skillsString}" />\n  </a>\n</p>`;
 
   const stats = data.showStats ? `
@@ -127,6 +126,75 @@ ${skillsBadge}
 - [Website](${data.portfolio}) | [LinkedIn](https://linkedin.com/in/${data.linkedin})
 
 ${stats}
+`.trim();
+
+    case 'developer-focused':
+      return `# 💻 ${data.name} | ${data.title}
+${visitorCount}
+
+> ${data.bio}
+
+### 🛠 Languages & Tools
+${skillsBadge}
+
+### 🚀 Projects & Work
+- 🔭 Working on: **${data.currentWork}**
+- 🌱 Learning: **${data.learning}**
+- 💬 Ask me about: **${data.askMeAbout}**
+
+### 📊 GitHub Activity
+${stats}
+${streak}
+`.trim();
+
+    case 'dark-elegant':
+      return `<h1 align="center">${data.name}</h1>
+<p align="center"><b>${data.title}</b></p>
+
+<p align="center">
+  ${data.bio}
+</p>
+
+---
+
+<h3 align="center">🛠 Tech Stack</h3>
+${skillsBadge.replace('<p align="left">', '<p align="center">')}
+
+<h3 align="center">📊 Metrics</h3>
+${stats}
+${streak}
+${trophies}
+
+<h3 align="center">📬 Connect</h3>
+<p align="center">
+  ${socialLinks}
+</p>
+`.trim();
+
+    case 'community-leader':
+      return `# 🤝 Community & Open Source | ${data.name}
+
+${visitorCount}
+
+### 🌟 About Me
+${data.bio}
+
+---
+
+### 🏆 Contributions & Impact
+${trophies}
+
+### 📊 GitHub Stats
+${stats}
+${streak}
+
+### 🛠 Technical Skills
+${skillsBadge}
+
+### 📬 Let's Connect
+- 💼 LinkedIn: [${data.linkedin}](https://linkedin.com/in/${data.linkedin})
+- 🐦 Twitter: [${data.twitter}](https://twitter.com/${data.twitter})
+- 📧 Email: [${data.email}](mailto:${data.email})
 `.trim();
 
     default: // Standard Pro
