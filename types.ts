@@ -9,6 +9,10 @@ export interface ProfileData {
   github: string;
   linkedin: string;
   twitter: string;
+  reddit: string;
+  stackoverflow: string;
+  instagram: string;
+  youtube: string;
   skills: string[];
   currentWork: string;
   learning: string;

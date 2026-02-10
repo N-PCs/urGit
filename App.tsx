@@ -8,11 +8,7 @@ import { THEMES, TEMPLATES, INITIAL_PROFILE_DATA, SKILL_OPTIONS } from './consta
 import { generateMarkdown } from './services/markdownGenerator';
 
 import { fetchGitHubStats } from './services/githubService';
-import { 
-  StandardPreview, MinimalPreview, StatsHeavyPreview, CreativePreview, 
-  CompactPreview, AcademicPreview, DeveloperPreview, DarkElegantPreview, 
-  CommunityPreview 
-} from './components/TemplatePreviews';
+import GithubMarkdownPreview from './components/GithubMarkdownPreview';
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -27,7 +23,9 @@ const App: React.FC = () => {
   
   const [themeDrawerOpen, setThemeDrawerOpen] = useState(false);
   const [skillsDrawerOpen, setSkillsDrawerOpen] = useState(false);
+  const [socialDrawerOpen, setSocialDrawerOpen] = useState(false);
   const [skillSearch, setSkillSearch] = useState('');
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -42,16 +40,16 @@ const App: React.FC = () => {
       document.documentElement.classList.remove('dark');
     }
   }, [isDark]);
-  useEffect(() => {
-    const fetchStats = async () => {
-      if (profileData.github) {
-        setStatsLoading(true);
-        const stats = await fetchGitHubStats(profileData.github);
-        setApiStats(stats);
-        setStatsLoading(false);
-      }
-    };
+  const fetchStats = async () => {
+    if (profileData.github) {
+      setStatsLoading(true);
+      const stats = await fetchGitHubStats(profileData.github);
+      setApiStats(stats);
+      setStatsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     const debounce = setTimeout(fetchStats, 1000);
     return () => clearTimeout(debounce);
   }, [profileData.github]);
@@ -69,21 +67,6 @@ const App: React.FC = () => {
     };
     updateProfile('statsTheme', themeMap[selectedTheme.id] || 'dark');
   }, [selectedTheme]);
-
-  const PreviewComponent = useMemo(() => {
-    const props = { profileData, githubStats: apiStats, theme: selectedTheme };
-    switch (selectedTemplate) {
-      case 'minimal': return <MinimalPreview {...props} />;
-      case 'stats-heavy': return <StatsHeavyPreview {...props} />;
-      case 'creative': return <CreativePreview {...props} />;
-      case 'compact': return <CompactPreview {...props} />;
-      case 'academic': return <AcademicPreview {...props} />;
-      case 'developer-focused': return <DeveloperPreview {...props} />;
-      case 'dark-elegant': return <DarkElegantPreview {...props} />;
-      case 'community-leader': return <CommunityPreview {...props} />;
-      default: return <StandardPreview {...props} />;
-    }
-  }, [selectedTemplate, profileData, apiStats, selectedTheme]);
 
   const markdown = useMemo(() => {
     return generateMarkdown(profileData, selectedTemplate);
@@ -185,44 +168,44 @@ const App: React.FC = () => {
          </div>
       </div>
 
-      {/* Skills Drawer (Slide Menu) */}
-      <div className={`fixed inset-y-0 right-0 w-96 z-50 transform ${skillsDrawerOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-500 ease-in-out border-l shadow-2xl ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+      {/* Social Links Drawer */}
+      <div className={`fixed inset-y-0 right-0 w-80 z-50 transform ${socialDrawerOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-500 ease-in-out border-l shadow-2xl ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
          <div className="p-8 h-full flex flex-col">
-            <div className="flex items-center justify-between mb-6">
-               <h3 className="text-xl font-black flex items-center gap-2"><Code className="text-blue-500" /> Tech Stack</h3>
-               <button onClick={() => setSkillsDrawerOpen(false)} className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"><X size={24} /></button>
+            <div className="flex items-center justify-between mb-8">
+               <h3 className="text-xl font-black flex items-center gap-2"><Send className="text-blue-500" /> Social Links</h3>
+               <button onClick={() => setSocialDrawerOpen(false)} className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"><X size={24} /></button>
             </div>
-            <div className="relative mb-6">
-               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-               <input 
-                  placeholder="Search 300+ icons..."
-                  value={skillSearch}
-                  onChange={(e) => setSkillSearch(e.target.value)}
-                  className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border transition-all outline-none ${isDark ? 'bg-slate-800 border-slate-700 text-white focus:border-blue-500' : 'bg-slate-100 border-slate-200 focus:border-blue-500'}`}
-               />
-            </div>
-            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar grid grid-cols-3 gap-2">
-               {filteredSkills.map(skill => (
-                  <button
-                    key={skill}
-                    onClick={() => toggleSkill(skill)}
-                    className={`flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all ${profileData.skills.includes(skill) ? 'bg-blue-600 border-blue-600 shadow-lg shadow-blue-500/20' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800'}`}
-                  >
-                    <img src={`https://skillicons.dev/icons?i=${skill}`} alt={skill} className="w-8 h-8 rounded-lg" />
-                    <span className={`text-[10px] font-bold truncate w-full text-center ${profileData.skills.includes(skill) ? 'text-white' : 'text-slate-400'}`}>{skill}</span>
-                  </button>
+            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-5">
+               {[
+                 { id: 'linkedin', label: 'LinkedIn Username', icon: Linkedin },
+                 { id: 'twitter', label: 'Twitter Handle', icon: Twitter },
+                 { id: 'reddit', label: 'Reddit Username', icon: Search },
+                 { id: 'stackoverflow', label: 'StackOverflow ID', icon: Code },
+                 { id: 'instagram', label: 'Instagram Handle', icon: Palette },
+                 { id: 'youtube', label: 'YouTube Channel', icon: Cpu },
+               ].map(social => (
+                 <div key={social.id} className="space-y-2">
+                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
+                     <social.icon size={12} /> {social.label}
+                   </label>
+                   <input 
+                      value={profileData[social.id as keyof ProfileData] as string}
+                      onChange={(e) => updateProfile(social.id as any, e.target.value)}
+                      placeholder="Your handle..."
+                      className={`w-full px-4 py-3 rounded-2xl border transition-all outline-none text-sm ${isDark ? 'bg-slate-800 border-slate-700 text-white focus:border-blue-500' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500'}`} 
+                   />
+                 </div>
                ))}
             </div>
-            <div className="mt-6 pt-6 border-t border-slate-800 flex justify-between items-center">
-               <span className="text-xs font-black text-slate-500 uppercase tracking-widest">{profileData.skills.length} Selected</span>
-               <button onClick={() => setSkillsDrawerOpen(false)} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/30">Done</button>
+            <div className="mt-6 pt-6 border-t border-slate-800">
+               <button onClick={() => setSocialDrawerOpen(false)} className="w-full py-4 bg-blue-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/30 transition-all active:scale-95">Save Changes</button>
             </div>
          </div>
       </div>
 
       {/* Backdrop for Drawers */}
-      {(themeDrawerOpen || skillsDrawerOpen) && (
-        <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => { setThemeDrawerOpen(false); setSkillsDrawerOpen(false); }}></div>
+      {(themeDrawerOpen || skillsDrawerOpen || socialDrawerOpen) && (
+        <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => { setThemeDrawerOpen(false); setSkillsDrawerOpen(false); setSocialDrawerOpen(false); }}></div>
       )}
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -244,7 +227,16 @@ const App: React.FC = () => {
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-400 ml-1">GitHub Username</label>
-                        <input value={profileData.github} onChange={(e) => updateProfile('github', e.target.value)} className={`w-full px-5 py-3.5 rounded-2xl border transition-all focus:ring-4 focus:ring-blue-500/10 outline-none ${isDark ? 'bg-slate-800 border-slate-700 text-white focus:border-blue-500' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500'}`} />
+                        <div className="flex gap-2">
+                          <input value={profileData.github} onChange={(e) => updateProfile('github', e.target.value)} className={`flex-1 px-5 py-3.5 rounded-2xl border transition-all focus:ring-4 focus:ring-blue-500/10 outline-none ${isDark ? 'bg-slate-800 border-slate-700 text-white focus:border-blue-500' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500'}`} />
+                          <button 
+                            onClick={fetchStats}
+                            disabled={statsLoading}
+                            className={`p-3.5 rounded-2xl border transition-all ${isDark ? 'bg-slate-800 border-slate-700 hover:border-blue-500 text-blue-500' : 'bg-white border-slate-200 hover:border-blue-500 text-blue-600 shadow-sm'} ${statsLoading ? 'animate-pulse opacity-50' : 'active:scale-95'}`}
+                          >
+                            <Zap size={20} fill={statsLoading ? "currentColor" : "none"} />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -252,20 +244,18 @@ const App: React.FC = () => {
                   {/* Actions (Slide Menu Triggers) */}
                   <section className="space-y-4">
                      <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Aesthetic Controls</h3>
-                     <div className="grid grid-cols-2 gap-4">
-                        <button onClick={() => setThemeDrawerOpen(true)} className={`flex items-center justify-between p-5 rounded-3xl border transition-all ${isDark ? 'bg-slate-800/50 border-slate-700 hover:border-blue-500' : 'bg-slate-50 border-slate-200 hover:border-blue-500'}`}>
-                           <div className="flex items-center gap-3">
-                              <Palette className="text-blue-500" size={20} />
-                              <span className="text-sm font-black">Theme</span>
-                           </div>
-                           <ChevronRight size={16} className="text-slate-500" />
+                     <div className="grid grid-cols-3 gap-3">
+                        <button onClick={() => setThemeDrawerOpen(true)} className={`flex flex-col items-center justify-center p-4 rounded-3xl border transition-all ${isDark ? 'bg-slate-800/50 border-slate-700 hover:border-blue-500' : 'bg-slate-50 border-slate-200 hover:border-blue-500'}`}>
+                           <Palette className="text-blue-500 mb-2" size={20} />
+                           <span className="text-[10px] font-black uppercase tracking-widest">Theme</span>
                         </button>
-                        <button onClick={() => setSkillsDrawerOpen(true)} className={`flex items-center justify-between p-5 rounded-3xl border transition-all ${isDark ? 'bg-slate-800/50 border-slate-700 hover:border-blue-500' : 'bg-slate-50 border-slate-200 hover:border-blue-500'}`}>
-                           <div className="flex items-center gap-3">
-                              <Code className="text-emerald-500" size={20} />
-                              <span className="text-sm font-black">Stack</span>
-                           </div>
-                           <ChevronRight size={16} className="text-slate-500" />
+                        <button onClick={() => setSkillsDrawerOpen(true)} className={`flex flex-col items-center justify-center p-4 rounded-3xl border transition-all ${isDark ? 'bg-slate-800/50 border-slate-700 hover:border-blue-500' : 'bg-slate-50 border-slate-200 hover:border-blue-500'}`}>
+                           <Code className="text-emerald-500 mb-2" size={20} />
+                           <span className="text-[10px] font-black uppercase tracking-widest">Stack</span>
+                        </button>
+                        <button onClick={() => setSocialDrawerOpen(true)} className={`flex flex-col items-center justify-center p-4 rounded-3xl border transition-all ${isDark ? 'bg-slate-800/50 border-slate-700 hover:border-blue-500' : 'bg-slate-50 border-slate-200 hover:border-blue-500'}`}>
+                           <Send className="text-rose-500 mb-2" size={20} />
+                           <span className="text-[10px] font-black uppercase tracking-widest">Socials</span>
                         </button>
                      </div>
                   </section>
@@ -306,23 +296,35 @@ const App: React.FC = () => {
                 <div className={`px-10 py-6 flex items-center justify-between border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}>
                   <div className="flex items-center gap-4">
                     <div className="flex space-x-2">
-                      <div className="w-3.5 h-3.5 rounded-full bg-rose-500 shadow-sm"></div>
-                      <div className="w-3.5 h-3.5 rounded-full bg-amber-500 shadow-sm"></div>
-                      <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-sm"></div>
+                       <div className="w-3.5 h-3.5 rounded-full bg-rose-500 shadow-sm"></div>
+                       <div className="w-3.5 h-3.5 rounded-full bg-amber-500 shadow-sm"></div>
+                       <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-sm"></div>
                     </div>
                     <div className="h-6 w-px bg-slate-200 dark:bg-slate-800"></div>
                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Live Simulation Dashboard</span>
                   </div>
-                  <button 
-                    onClick={handleCopy}
-                    className="flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-sm font-black transition-all active:scale-95 shadow-2xl shadow-blue-500/40"
-                  >
-                    {copied ? <Check size={20} /> : <Copy size={20} />}
-                    <span>{copied ? 'Copied' : 'Copy MD'}</span>
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button 
+                      onClick={() => setIsFullscreen(true)}
+                      className={`p-3 rounded-2xl border transition-all ${isDark ? 'bg-slate-900 border-slate-800 hover:border-blue-500 text-slate-400 hover:text-blue-500' : 'bg-white border-slate-100 hover:border-blue-500 text-slate-500 shadow-sm'} active:scale-95`}
+                      title="Full Screen Preview"
+                    >
+                      <ExternalLink size={20} />
+                    </button>
+                    <button 
+                      onClick={handleCopy}
+                      className="flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-sm font-black transition-all active:scale-95 shadow-2xl shadow-blue-500/40"
+                    >
+                      {copied ? <Check size={20} /> : <Copy size={20} />}
+                      <span>{copied ? 'Copied' : 'Copy MD'}</span>
+                    </button>
+                  </div>
                 </div>
 
-                <div className="p-12 md:p-16 max-h-[800px] overflow-y-auto transition-all duration-700 custom-scrollbar relative" style={{ backgroundColor: selectedTheme.background }}>
+                <div 
+                  className="p-12 md:p-16 max-h-[800px] overflow-y-auto transition-all duration-700 custom-scrollbar relative"
+                  style={{ backgroundColor: selectedTheme.background }}
+                >
                   {statsLoading && (
                     <div className="absolute inset-0 z-10 bg-black/5 backdrop-blur-[2px] flex items-center justify-center">
                        <div className="flex flex-col items-center gap-4">
@@ -331,18 +333,7 @@ const App: React.FC = () => {
                        </div>
                     </div>
                   )}
-                  {PreviewComponent}
-                  
-                  <div className="mt-16 pt-16 border-t border-dashed" style={{ borderColor: `${selectedTheme.secondary}33` }}>
-                    <h3 className="text-center text-xs font-black uppercase tracking-[0.3em] mb-10 opacity-30" style={{ color: selectedTheme.text }}>Technologies Highlight</h3>
-                    <div className="flex justify-center flex-wrap gap-4">
-                       <img 
-                          src={`https://skillicons.dev/icons?i=${profileData.skills.join(',')}&theme=${selectedTheme.id.includes('light') ? 'light' : 'dark'}`} 
-                          alt="Skills Stack" 
-                          className="max-w-full drop-shadow-2xl rounded-2xl"
-                        />
-                    </div>
-                  </div>
+                  <GithubMarkdownPreview markdown={markdown} />
                 </div>
 
                 <div className={`p-10 ${isDark ? 'bg-slate-900/50' : 'bg-slate-50'} border-t ${isDark ? 'border-slate-800' : 'border-slate-100'}`}>
@@ -406,6 +397,40 @@ const App: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Full Screen Overlay */}
+      {isFullscreen && (
+        <div className="fixed inset-0 z-[100] bg-slate-950 animate-in fade-in duration-500 flex flex-col">
+          <div className="h-20 border-b border-slate-800 bg-slate-950 flex items-center justify-between px-10">
+            <div className="flex items-center space-x-3">
+              <div className="bg-blue-600 p-2 rounded-xl">
+                <Github className="text-white" size={24} />
+              </div>
+              <span className="text-xl font-black text-white">urGit Full Preview</span>
+            </div>
+            <div className="flex items-center gap-4">
+               <button 
+                  onClick={handleCopy}
+                  className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-black transition-all"
+               >
+                  {copied ? <Check size={18} /> : <Copy size={18} />}
+                  <span>{copied ? 'Copied' : 'Copy MD'}</span>
+               </button>
+               <button 
+                  onClick={() => setIsFullscreen(false)}
+                  className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-white hover:bg-slate-800 transition-all active:scale-95"
+               >
+                  <X size={24} />
+               </button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto bg-white dark:bg-slate-950 p-10 md:p-20 flex justify-center custom-scrollbar">
+            <div className="max-w-4xl w-full">
+               <GithubMarkdownPreview markdown={markdown} />
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 5px; }

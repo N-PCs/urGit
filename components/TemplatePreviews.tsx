@@ -1,13 +1,35 @@
 
 import React from 'react';
 import { ProfileData, GitHubStats, Theme } from '../types';
-import { Github, MapPin, Mail, ExternalLink, Zap, Heart, LayoutGrid, BarChart3, Code, Award, Star } from 'lucide-react';
+import { Github, MapPin, Mail, ExternalLink, Zap, Heart, LayoutGrid, BarChart3, Code, Award, Star, Twitter, Linkedin, Youtube, Instagram, MoreHorizontal } from 'lucide-react';
 
 interface PreviewProps {
   profileData: ProfileData;
   githubStats: GitHubStats | null;
   theme: Theme;
 }
+
+const SocialIcons: React.FC<{ data: ProfileData }> = ({ data }) => {
+  const socialList = [
+    { id: 'github', icon: Github, value: data.github, url: `https://github.com/${data.github}` },
+    { id: 'linkedin', icon: Linkedin, value: data.linkedin, url: `https://linkedin.com/in/${data.linkedin}` },
+    { id: 'twitter', icon: Twitter, value: data.twitter, url: `https://twitter.com/${data.twitter}` },
+    { id: 'instagram', icon: Instagram, value: data.instagram, url: `https://instagram.com/${data.instagram}` },
+    { id: 'youtube', icon: Youtube, value: data.youtube, url: `https://youtube.com/@${data.youtube}` },
+    { id: 'reddit', icon: MoreHorizontal, label: 'Reddit', value: data.reddit, url: `https://reddit.com/u/${data.reddit}` },
+    { id: 'stackoverflow', icon: Code, label: 'StackOverflow', value: data.stackoverflow, url: `https://stackoverflow.com/users/${data.stackoverflow}` },
+  ].filter(s => s.value);
+
+  return (
+    <div className="flex flex-wrap justify-center gap-4 mt-6">
+      {socialList.map(social => (
+        <a key={social.id} href={social.url} target="_blank" rel="noopener noreferrer" className="p-2 rounded-xl bg-slate-500/10 hover:bg-blue-500/20 transition-all">
+          <social.icon size={18} />
+        </a>
+      ))}
+    </div>
+  );
+};
 
 export const StandardPreview: React.FC<PreviewProps> = ({ profileData, githubStats, theme }) => {
   return (
@@ -21,6 +43,7 @@ export const StandardPreview: React.FC<PreviewProps> = ({ profileData, githubSta
            {profileData.location && <div className="flex items-center gap-1"><MapPin size={14} /> {profileData.location}</div>}
            {profileData.email && <div className="flex items-center gap-1"><Mail size={14} /> {profileData.email}</div>}
         </div>
+        <SocialIcons data={profileData} />
       </div>
 
       <div className="p-8 rounded-3xl border border-dashed" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
@@ -40,28 +63,38 @@ export const StandardPreview: React.FC<PreviewProps> = ({ profileData, githubSta
           </ul>
         </div>
 
-        {githubStats && profileData.showStats && (
-          <div className="p-6 rounded-3xl border" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
-            <h4 className="text-xs font-black uppercase tracking-wider mb-4 opacity-50">GitHub Statistics</h4>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm"><span>Stars Earned</span> <b>{githubStats.totalStars}</b></div>
-              <div className="flex justify-between text-sm"><span>Overall Rating</span> <b className="text-blue-500">{githubStats.rating}</b></div>
-            </div>
+        {profileData.showStats && (
+          <div className="space-y-4">
+            <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" className="w-full" />
+            <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" className="w-full" />
           </div>
         )}
       </div>
 
+      <div className="space-y-4">
+        <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-2" style={{ color: theme.primary }}>
+          <Code size={16} /> Tech Stack
+        </h3>
+        <img src={`https://skillicons.dev/icons?i=${profileData.skills.join(',')}&theme=${theme.id.includes('light') ? 'light' : 'dark'}`} alt="Skills" />
+      </div>
+
       <div className="flex flex-col gap-6">
         {profileData.showTrophies && (
-          <div className="p-4 rounded-2xl border border-dashed text-center opacity-60" style={{ borderColor: `${theme.secondary}33` }}>
-             <Award size={20} className="mx-auto mb-2" />
-             <span className="text-[10px] font-bold uppercase tracking-widest">GitHub Trophies Display</span>
+          <div className="flex justify-center">
+            <img 
+              src={`https://github-profile-trophy.vercel.app/?username=${profileData.github}&theme=${profileData.statsTheme}&no-frame=true&column=7`} 
+              alt="Trophies" 
+              className="max-w-full"
+            />
           </div>
         )}
         {profileData.showStreak && (
-          <div className="p-4 rounded-2xl border border-dashed text-center opacity-60" style={{ borderColor: `${theme.secondary}33` }}>
-             <Zap size={20} className="mx-auto mb-2 text-orange-500" />
-             <span className="text-[10px] font-bold uppercase tracking-widest">Contribution Streak Graph</span>
+          <div className="flex justify-center">
+            <img 
+              src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} 
+              alt="GitHub Streak" 
+              className="max-w-full"
+            />
           </div>
         )}
       </div>
@@ -85,15 +118,24 @@ export const MinimalPreview: React.FC<PreviewProps> = ({ profileData, githubStat
     <div className="grid grid-cols-2 gap-10 pt-10 border-t" style={{ borderColor: `${theme.secondary}33` }}>
       <div className="space-y-4">
         <h3 className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40">Connect</h3>
-        <div className="space-y-2 text-sm font-bold">
-          <p className="hover:text-blue-500 cursor-pointer flex items-center gap-2">GitHub <ExternalLink size={14}/></p>
-          <p className="hover:text-blue-500 cursor-pointer flex items-center gap-2">LinkedIn <ExternalLink size={14}/></p>
-        </div>
+        <SocialIcons data={profileData} />
       </div>
       <div className="space-y-4">
         <h3 className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40">Location</h3>
-        <p className="text-sm font-bold">{profileData.location}</p>
+        <p className="text-sm font-bold">{profileData.location || "Earth"}</p>
       </div>
+    </div>
+
+    <div className="space-y-8 pt-10 border-t" style={{ borderColor: `${theme.secondary}33` }}>
+       <h3 className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40">Tech Stack</h3>
+       <img src={`https://skillicons.dev/icons?i=${profileData.skills.join(',')}&theme=${theme.id.includes('light') ? 'light' : 'dark'}`} alt="Skills" />
+       
+       {profileData.showStats && (
+         <div className="space-y-4 pt-4">
+           <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" />
+           <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" />
+         </div>
+       )}
     </div>
   </div>
 );
@@ -101,7 +143,10 @@ export const MinimalPreview: React.FC<PreviewProps> = ({ profileData, githubStat
 export const StatsHeavyPreview: React.FC<PreviewProps> = ({ profileData, githubStats, theme }) => (
   <div className="space-y-10" style={{ color: theme.text }}>
     <div className="flex items-center justify-between">
-      <h2 className="text-2xl font-black tracking-tight">{profileData.github}'s Lab</h2>
+      <div>
+         <h2 className="text-2xl font-black tracking-tight">{profileData.github}'s Lab</h2>
+         <SocialIcons data={profileData} />
+      </div>
       <div className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-blue-500 text-white">System: Active</div>
     </div>
 
@@ -119,6 +164,13 @@ export const StatsHeavyPreview: React.FC<PreviewProps> = ({ profileData, githubS
               <div className="text-[10px] uppercase font-black opacity-40">{s.label}</div>
             </div>
           ))}
+        </div>
+
+        <div className="p-10 rounded-[3rem] border" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
+           <h3 className="text-sm font-black uppercase tracking-widest text-center mb-8">🛠 Tech Stack</h3>
+           <div className="flex justify-center">
+             <img src={`https://skillicons.dev/icons?i=${profileData.skills.join(',')}&theme=${theme.id.includes('light') ? 'light' : 'dark'}`} alt="Skills" />
+           </div>
         </div>
 
         <div className="p-10 rounded-[3rem] border" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
@@ -142,16 +194,20 @@ export const StatsHeavyPreview: React.FC<PreviewProps> = ({ profileData, githubS
     )}
 
     {profileData.showTrophies && (
-      <div className="p-10 rounded-[3rem] border border-dashed text-center" style={{ borderColor: `${theme.secondary}33` }}>
-        <Award size={32} className="mx-auto mb-4 opacity-20" />
-        <h3 className="text-sm font-black uppercase tracking-widest opacity-40">Achievements Showcase</h3>
+      <div className="flex justify-center py-6">
+        <img 
+          src={`https://github-profile-trophy.vercel.app/?username=${profileData.github}&theme=${profileData.statsTheme}&no-frame=true&column=7`} 
+          alt="Trophies" 
+        />
       </div>
     )}
 
     {profileData.showStreak && (
-      <div className="p-10 rounded-[3rem] border border-dashed text-center" style={{ borderColor: `${theme.secondary}33` }}>
-        <Zap size={32} className="mx-auto mb-4 text-orange-500 opacity-20" />
-        <h3 className="text-sm font-black uppercase tracking-widest opacity-40">Commitment Metrics</h3>
+      <div className="flex justify-center py-6">
+        <img 
+          src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} 
+          alt="GitHub Streak" 
+        />
       </div>
     )}
   </div>
@@ -168,27 +224,36 @@ export const CreativePreview: React.FC<PreviewProps> = ({ profileData, githubSta
         <h2 className="text-5xl font-black italic tracking-tighter">{profileData.title}</h2>
      </div>
 
-     <div className="relative">
-        <div className="absolute inset-0 bg-blue-500/20 blur-[100px] -z-10 rounded-full"></div>
-        <p className="text-3xl font-bold max-w-2xl mx-auto leading-relaxed underline decoration-blue-500/30 decoration-8 underline-offset-8">
-          {profileData.bio}
-        </p>
+     <div className="flex justify-center mb-8">
+        <img src={`https://komarev.com/ghpvc/?username=${profileData.github}&label=Profile%20views&color=0e75b6&style=flat`} alt="Viewer Count" />
      </div>
 
-     <div className="flex justify-center gap-10">
-        <div className="text-center group cursor-pointer">
-           <div className="w-16 h-16 rounded-2xl flex items-center justify-center border-2 mb-3 group-hover:bg-blue-500 group-hover:border-blue-500 transition-all">
-              <Github size={28} />
-           </div>
-           <span className="text-[10px] font-black uppercase tracking-widest">Git</span>
-        </div>
-        <div className="text-center group cursor-pointer">
-           <div className="w-16 h-16 rounded-2xl flex items-center justify-center border-2 mb-3 group-hover:bg-rose-500 group-hover:border-rose-500 transition-all">
-              <Heart size={28} />
-           </div>
-           <span className="text-[10px] font-black uppercase tracking-widest">Sponsor</span>
+     <div className="space-y-8">
+        <h2 className="text-2xl font-black uppercase tracking-widest">🛠 Tech Stack</h2>
+        <div className="flex justify-center">
+          <img src={`https://skillicons.dev/icons?i=${profileData.skills.join(',')}&theme=${theme.id.includes('light') ? 'light' : 'dark'}`} alt="Skills" />
         </div>
      </div>
+
+     <div className="flex justify-center mt-12">
+        <img src={`https://quotes-github-readme.vercel.app/api?type=horizontal&theme=radical`} alt="Quote" className="max-w-full" />
+     </div>
+
+      <SocialIcons data={profileData} />
+
+      {profileData.showStats && (
+        <div className="space-y-8 pt-8">
+          <div className="flex justify-center gap-4 flex-wrap">
+            <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="GitHub Stats" />
+          </div>
+        </div>
+      )}
+
+      {profileData.showStreak && (
+        <div className="flex justify-center pt-8">
+          <img src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="GitHub Streak" />
+        </div>
+      )}
   </div>
 );
 
@@ -203,17 +268,14 @@ export const CompactPreview: React.FC<PreviewProps> = ({ profileData, githubStat
       <div className="bg-blue-500/10 p-3 rounded-2xl text-blue-500"><Github size={24}/></div>
     </div>
     <p className="text-sm font-medium mb-8 leading-relaxed opacity-80">{profileData.bio}</p>
-    <div className="flex gap-3">
-       {profileData.skills.slice(0, 5).map(s => (
-         <img key={s} src={`https://skillicons.dev/icons?i=${s}`} className="w-6 h-6 grayscale hover:grayscale-0 transition-all" alt={s} />
-       ))}
-       <div className="w-6 h-6 rounded-lg bg-slate-500/10 flex items-center justify-center text-[10px] font-black">+{profileData.skills.length - 5}</div>
+    <div className="space-y-4 mb-8">
+       <div className="text-[10px] font-black uppercase opacity-40">Tech Stack</div>
+       <img src={`https://skillicons.dev/icons?i=${profileData.skills.join(',')}&theme=${theme.id.includes('light') ? 'light' : 'dark'}`} alt="Skills" />
     </div>
     
     {profileData.showStats && (
       <div className="mt-6 pt-6 border-t flex items-center justify-between" style={{ borderColor: `${theme.secondary}33` }}>
-         <div className="text-[10px] font-black uppercase opacity-40">Live Performance</div>
-         <div className="text-sm font-black text-blue-500">{githubStats?.rating || 'B+'}</div>
+         <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true&layout=compact`} alt="Stats" />
       </div>
     )}
   </div>
@@ -224,6 +286,7 @@ export const AcademicPreview: React.FC<PreviewProps> = ({ profileData, githubSta
      <div className="border-b-2 pb-6" style={{ borderColor: theme.primary }}>
         <h2 className="text-4xl font-bold tracking-tight mb-2">{profileData.name}</h2>
         <p className="text-lg opacity-60 italic">{profileData.title}</p>
+        {profileData.location && <p className="text-sm opacity-50 mt-1">📍 {profileData.location}</p>}
      </div>
      <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
         <div className="md:col-span-8 space-y-6">
@@ -238,11 +301,16 @@ export const AcademicPreview: React.FC<PreviewProps> = ({ profileData, githubSta
         </div>
         <div className="md:col-span-4 space-y-8">
            <div className="space-y-4">
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] border-b pb-2">Technical Proficiencies</h4>
-              <div className="flex flex-wrap gap-2">
-                 {profileData.skills.slice(0, 8).map(s => <span key={s} className="px-3 py-1 bg-slate-500/10 rounded-full text-[10px] font-bold">{s}</span>)}
-              </div>
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] border-b pb-2">Digital Networks</h4>
+              <SocialIcons data={profileData} />
            </div>
+           
+           {profileData.showStats && (
+             <div className="space-y-4">
+                <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" className="w-full" />
+                <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" className="w-full" />
+             </div>
+           )}
         </div>
      </div>
   </div>
@@ -250,15 +318,18 @@ export const AcademicPreview: React.FC<PreviewProps> = ({ profileData, githubSta
 
 export const DeveloperPreview: React.FC<PreviewProps> = ({ profileData, githubStats, theme }) => (
   <div className="space-y-10" style={{ color: theme.text }}>
-     <div className="flex items-end gap-6">
-        <img src={`https://github.com/${profileData.github}.png`} className="w-32 h-32 rounded-3xl border-4" style={{ borderColor: theme.primary }} alt="avatar" />
-        <div className="pb-2 space-y-1">
-           <h2 className="text-3xl font-black tracking-tighter">{profileData.name}</h2>
-           <div className="flex items-center gap-2 text-blue-500">
-              <Code size={16} />
-              <span className="text-xs font-black uppercase tracking-widest">{profileData.title}</span>
+     <div className="flex items-end justify-between">
+        <div className="flex items-end gap-6">
+           <img src={`https://github.com/${profileData.github}.png`} className="w-32 h-32 rounded-3xl border-4" style={{ borderColor: theme.primary }} alt="avatar" />
+           <div className="pb-2 space-y-1">
+              <h2 className="text-3xl font-black tracking-tighter">{profileData.name}</h2>
+              <div className="flex items-center gap-2 text-blue-500">
+                 <Code size={16} />
+                 <span className="text-xs font-black uppercase tracking-widest">{profileData.title}</span>
+              </div>
            </div>
         </div>
+        <SocialIcons data={profileData} />
      </div>
 
      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -281,22 +352,13 @@ export const DeveloperPreview: React.FC<PreviewProps> = ({ profileData, githubSt
            {profileData.showStats && (
              <div className="p-8 rounded-[2rem] border" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
                 <h3 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2"><BarChart3 size={16}/> Performance</h3>
-                <div className="grid grid-cols-2 gap-4">
-                   <div className="text-center p-3 rounded-2xl bg-white/5 border border-white/10">
-                      <div className="text-xl font-black">{githubStats?.totalStars || 0}</div>
-                      <div className="text-[10px] uppercase font-black opacity-30">Stars</div>
-                   </div>
-                   <div className="text-center p-3 rounded-2xl bg-white/5 border border-white/10">
-                      <div className="text-xl font-black text-blue-500">{githubStats?.rating || '?'}</div>
-                      <div className="text-[10px] uppercase font-black opacity-30">Rating</div>
-                   </div>
-                </div>
+                <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" className="w-full" />
+                <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" className="w-full mt-4" />
              </div>
            )}
            {profileData.showStreak && (
-              <div className="p-8 rounded-[2rem] border border-dashed text-center opacity-40" style={{ borderColor: `${theme.secondary}33` }}>
-                 <Zap size={20} className="mx-auto mb-2 text-orange-500" />
-                 <span className="text-[10px] font-black uppercase tracking-widest">Streak Analytics Enabled</span>
+              <div className="p-8 rounded-[2rem] border border-dashed text-center" style={{ borderColor: `${theme.secondary}33` }}>
+                 <img src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="Streak" className="w-full" />
               </div>
            )}
         </div>
@@ -316,10 +378,34 @@ export const DarkElegantPreview: React.FC<PreviewProps> = ({ profileData, github
         <p className="text-2xl font-light italic leading-relaxed opacity-90">{profileData.bio}</p>
      </div>
 
-     <div className="flex justify-center gap-12 font-black text-[10px] uppercase tracking-[0.3em] opacity-60">
-        <span className="hover:text-blue-500 cursor-pointer transition-colors">Portfolios</span>
-        <span className="hover:text-blue-500 cursor-pointer transition-colors">Archives</span>
-        <span className="hover:text-blue-500 cursor-pointer transition-colors">Socials</span>
+     <div className="space-y-12">
+        <div className="space-y-6">
+           <h3 className="text-sm font-black uppercase tracking-widest opacity-40">🛠 Tech Stack</h3>
+           <div className="flex justify-center">
+              <img src={`https://skillicons.dev/icons?i=${profileData.skills.join(',')}&theme=${theme.id.includes('light') ? 'light' : 'dark'}`} alt="Skills" />
+           </div>
+        </div>
+        
+        {profileData.showStats && (
+          <div className="flex flex-col items-center gap-6">
+            <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" />
+            <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" />
+          </div>
+        )}
+        {profileData.showStreak && (
+          <div className="flex justify-center">
+            <img src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="Streak" />
+          </div>
+        )}
+        {profileData.showTrophies && (
+          <div className="flex justify-center">
+            <img src={`https://github-profile-trophy.vercel.app/?username=${profileData.github}&theme=${profileData.statsTheme}&no-frame=true&column=7`} alt="Trophies" />
+          </div>
+        )}
+     </div>
+
+     <div className="mt-12">
+        <SocialIcons data={profileData} />
      </div>
   </div>
 );
@@ -330,22 +416,24 @@ export const CommunityPreview: React.FC<PreviewProps> = ({ profileData, githubSt
         <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-2xl">
            <Zap size={40} fill="currentColor" />
         </div>
-        <div>
+        <div className="flex-1">
            <h2 className="text-3xl font-black tracking-tight flex items-center gap-3">
               Community Spirit <Heart size={24} className="text-rose-500 fill-rose-500" />
            </h2>
            <p className="font-bold opacity-60">Powering Open Source | {profileData.name}</p>
         </div>
+        <SocialIcons data={profileData} />
      </div>
 
      <div className="p-12 rounded-[4rem] border-4 border-dashed" style={{ borderColor: `${theme.primary}44` }}>
         <p className="text-3xl font-black leading-tight mb-8">
            "{profileData.bio}"
         </p>
-        <div className="flex flex-wrap gap-4">
-           {profileData.skills.slice(0, 12).map(s => (
-             <div key={s} className="px-6 py-2 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-sm font-black text-blue-500">{s}</div>
-           ))}
+        <div className="space-y-6">
+           <h3 className="text-sm font-black uppercase tracking-widest text-blue-500">🛠 Technical Skills</h3>
+           <div className="flex justify-center">
+              <img src={`https://skillicons.dev/icons?i=${profileData.skills.join(',')}&theme=${theme.id.includes('light') ? 'light' : 'dark'}`} alt="Skills" />
+           </div>
         </div>
      </div>
 
@@ -365,15 +453,25 @@ export const CommunityPreview: React.FC<PreviewProps> = ({ profileData, githubSt
           </div>
         )}
         {profileData.showStats && (
-          <div className="p-8 rounded-[3rem] border" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
-             <h3 className="text-xs font-black uppercase tracking-widest mb-6">Git Influence</h3>
-             <div className="flex items-center gap-6">
-                <div className="text-5xl font-black text-blue-500">{githubStats?.totalStars || 0}</div>
-                <div className="text-xs font-bold leading-tight opacity-40">Total stars across<br/>all public repos</div>
-             </div>
+          <div className="p-8 rounded-[3rem] border flex flex-col items-center gap-6" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
+             <h3 className="text-xs font-black uppercase tracking-widest mb-2">Git Influence</h3>
+             <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" />
+             <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" />
           </div>
         )}
-     </div>
+      </div>
+
+      {profileData.showTrophies && (
+        <div className="flex justify-center py-8">
+           <img src={`https://github-profile-trophy.vercel.app/?username=${profileData.github}&theme=${profileData.statsTheme}&no-frame=true&column=7`} alt="Trophies" />
+        </div>
+      )}
+
+      {profileData.showStreak && (
+        <div className="flex justify-center py-8">
+           <img src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="Streak" />
+        </div>
+      )}
 
      {profileData.showStreak && (
         <div className="p-8 rounded-[3rem] border border-dashed text-center opacity-40" style={{ borderColor: `${theme.secondary}33` }}>
