@@ -10,11 +10,13 @@ import { generateMarkdown } from './services/markdownGenerator';
 import { fetchGitHubStats } from './services/githubService';
 import GithubMarkdownPreview from './components/GithubMarkdownPreview';
 
+import { useProfile } from './hooks/useProfile';
+
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isDark, setIsDark] = useState(false);
   const [activeTab, setActiveTab] = useState<'builder' | 'templates'>('builder');
-  const [profileData, setProfileData] = useState<ProfileData>(INITIAL_PROFILE_DATA);
+  const { profileData, setProfileData, updateProfile, toggleSkill } = useProfile();
   const [selectedTemplate, setSelectedTemplate] = useState<string>(TEMPLATES[0].id);
   const [selectedTheme, setSelectedTheme] = useState<Theme>(THEMES[0]);
   const [apiStats, setApiStats] = useState<GitHubStats | null>(null);
@@ -28,10 +30,25 @@ const App: React.FC = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setIsDark(true);
+    const savedThemeId = localStorage.getItem('urgit_selected_theme_id');
+    if (savedThemeId) {
+      const theme = THEMES.find(t => t.id === savedThemeId);
+      if (theme) setSelectedTheme(theme);
+    }
+
+    const savedActiveTab = localStorage.getItem('urgit_active_tab');
+    if (savedActiveTab === 'builder' || savedActiveTab === 'templates') {
+      setActiveTab(savedActiveTab);
     }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('urgit_selected_theme_id', selectedTheme.id);
+  }, [selectedTheme]);
+
+  useEffect(() => {
+    localStorage.setItem('urgit_active_tab', activeTab);
+  }, [activeTab]);
 
   useEffect(() => {
     if (isDark) {
@@ -76,19 +93,6 @@ const App: React.FC = () => {
     navigator.clipboard.writeText(markdown);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const updateProfile = (field: keyof ProfileData, value: any) => {
-    setProfileData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const toggleSkill = (skill: string) => {
-    setProfileData(prev => ({
-      ...prev,
-      skills: prev.skills.includes(skill)
-        ? prev.skills.filter(s => s !== skill)
-        : [...prev.skills, skill]
-    }));
   };
 
   const filteredSkills = useMemo(() => {
