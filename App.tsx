@@ -327,7 +327,7 @@ const App: React.FC = () => {
 
                 <div 
                   className="p-12 md:p-16 max-h-[800px] overflow-y-auto transition-all duration-700 custom-scrollbar relative"
-                  style={{ backgroundColor: selectedTheme.background }}
+                  style={{ backgroundColor: isDark ? selectedTheme.background : '#ffffff' }}
                 >
                   {statsLoading && (
                     <div className="absolute inset-0 z-10 bg-black/5 backdrop-blur-[2px] flex items-center justify-center">
