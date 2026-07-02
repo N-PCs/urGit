@@ -14,7 +14,7 @@ export const generateCompact = (data: ProfileData) => {
     <td width="40%" align="right" valign="top">
        ${getSocialLinks(data)}
        <br/>
-       <img src="https://github-readme-stats.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true&layout=compact" width="200" />
+       <img src="https://github-readme-stats-fast.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true&layout=compact" width="200" />
     </td>
   </tr>
 </table>
@@ -29,7 +29,7 @@ export const generateCompact = (data: ProfileData) => {
     </td>
     <td width="30%" align="right" valign="top">
       <b>🔥 Activity Pulse</b><br/>
-      <img src="https://github-readme-streak-stats.herokuapp.com/?user=${data.github}&theme=${data.statsTheme}&hide_border=true" width="180" />
+      <img src="https://streak-stats.demolab.com/?user=${data.github}&theme=${data.statsTheme}&hide_border=true" width="180" />
     </td>
   </tr>
 </table>

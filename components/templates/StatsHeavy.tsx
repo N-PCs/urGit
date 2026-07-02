@@ -17,17 +17,13 @@ ${getVisitorCount(data.github)}
 
 <table align="center">
   <tr>
-    <td align="center" width="33%">
-      <b>🏆 Achievements</b><br/>
-      <img src="https://github-profile-trophy.vercel.app/?username=${data.github}&theme=${data.statsTheme}&no-frame=true&column=2" />
-    </td>
-    <td align="center" width="33%">
+    <td align="center" width="50%">
       <b>📊 Core Metrics</b><br/>
-      <img src="https://github-readme-stats.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true" />
+      <img src="https://github-readme-stats-fast.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true" />
     </td>
-    <td align="center" width="33%">
+    <td align="center" width="50%">
       <b>🔥 Daily Streak</b><br/>
-      <img src="https://github-readme-streak-stats.herokuapp.com/?user=${data.github}&theme=${data.statsTheme}&hide_border=true" />
+      <img src="https://streak-stats.demolab.com/?user=${data.github}&theme=${data.statsTheme}&hide_border=true" />
     </td>
   </tr>
 </table>
@@ -40,7 +36,7 @@ ${getVisitorCount(data.github)}
     </td>
     <td width="30%" valign="top">
       <b>Top Languages:</b><br/>
-      <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=${data.github}&layout=compact&theme=${data.statsTheme}&hide_border=true" />
+      <img src="https://github-readme-stats-fast.vercel.app/api/top-langs/?username=${data.github}&layout=compact&theme=${data.statsTheme}&hide_border=true" />
     </td>
   </tr>
 </table>

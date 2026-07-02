@@ -13,6 +13,8 @@ export interface ProfileData {
   stackoverflow: string;
   instagram: string;
   youtube: string;
+  leetcode: string;
+  codeforces: string;
   skills: string[];
   currentWork: string;
   learning: string;
@@ -35,6 +37,27 @@ export interface GitHubStats {
   longestStreak: number;
   totalContributions: number;
   topLanguages: { name: string; color: string; percentage: number }[];
+}
+
+export interface LeetCodeStats {
+  username: string;
+  totalSolved: number;
+  easySolved: number;
+  mediumSolved: number;
+  hardSolved: number;
+  ranking: number;
+  reputation: number;
+  submissionCalendar: Record<string, number>;
+}
+
+export interface CodeforcesStats {
+  username: string;
+  rating: number;
+  rank: string;
+  maxRating: number;
+  maxRank: string;
+  totalSolved: number;
+  contests: number;
 }
 
 export interface Theme {

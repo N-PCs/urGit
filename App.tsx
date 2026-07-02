@@ -3,24 +3,33 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Github, Edit3, Layers, Sparkles, Copy, Check, ExternalLink, Menu, X, Heart, Code, Twitter, Linkedin, Mail, MapPin, Send, Cpu, Award, Zap, Palette, ChevronRight, LayoutGrid, BarChart3, Star, GitBranch, GitPullRequest, Info, Search } from 'lucide-react';
 import LoadingScreen from './components/LoadingScreen';
 import ThemeToggle from './components/ThemeToggle';
-import { ProfileData, Theme, GitHubStats } from './types';
+import { ProfileData, Theme, GitHubStats, LeetCodeStats, CodeforcesStats } from './types';
 import { THEMES, TEMPLATES, INITIAL_PROFILE_DATA, SKILL_OPTIONS } from './constants';
 import { generateMarkdown } from './services/markdownGenerator';
 
 import { fetchGitHubStats } from './services/githubService';
+import { fetchLeetCodeStats } from './services/leetcodeService';
+import { fetchCodeforcesStats } from './services/codeforcesService';
 import GithubMarkdownPreview from './components/GithubMarkdownPreview';
 
 import { useProfile } from './hooks/useProfile';
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('urgit_dark_mode');
+    return saved !== null ? saved === 'true' : true;
+  });
   const [activeTab, setActiveTab] = useState<'builder' | 'templates'>('builder');
   const { profileData, setProfileData, updateProfile, toggleSkill } = useProfile();
   const [selectedTemplate, setSelectedTemplate] = useState<string>(TEMPLATES[0].id);
   const [selectedTheme, setSelectedTheme] = useState<Theme>(THEMES[0]);
   const [apiStats, setApiStats] = useState<GitHubStats | null>(null);
   const [statsLoading, setStatsLoading] = useState(false);
+  const [lcStats, setLcStats] = useState<LeetCodeStats | null>(null);
+  const [lcLoading, setLcLoading] = useState(false);
+  const [cfStats, setCfStats] = useState<CodeforcesStats | null>(null);
+  const [cfLoading, setCfLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   
   const [themeDrawerOpen, setThemeDrawerOpen] = useState(false);
@@ -56,6 +65,7 @@ const App: React.FC = () => {
     } else {
       document.documentElement.classList.remove('dark');
     }
+    localStorage.setItem('urgit_dark_mode', String(isDark));
   }, [isDark]);
   const fetchStats = async () => {
     if (profileData.github) {
@@ -66,10 +76,38 @@ const App: React.FC = () => {
     }
   };
 
+  const fetchLcStats = async () => {
+    if (profileData.leetcode) {
+      setLcLoading(true);
+      const stats = await fetchLeetCodeStats(profileData.leetcode);
+      setLcStats(stats);
+      setLcLoading(false);
+    }
+  };
+
+  const fetchCfStats = async () => {
+    if (profileData.codeforces) {
+      setCfLoading(true);
+      const stats = await fetchCodeforcesStats(profileData.codeforces);
+      setCfStats(stats);
+      setCfLoading(false);
+    }
+  };
+
   useEffect(() => {
     const debounce = setTimeout(fetchStats, 1000);
     return () => clearTimeout(debounce);
   }, [profileData.github]);
+
+  useEffect(() => {
+    const debounce = setTimeout(fetchLcStats, 1000);
+    return () => clearTimeout(debounce);
+  }, [profileData.leetcode]);
+
+  useEffect(() => {
+    const debounce = setTimeout(fetchCfStats, 1000);
+    return () => clearTimeout(debounce);
+  }, [profileData.codeforces]);
 
   useEffect(() => {
     const themeMap: Record<string, string> = {
@@ -180,13 +218,15 @@ const App: React.FC = () => {
                <button onClick={() => setSocialDrawerOpen(false)} className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"><X size={24} /></button>
             </div>
             <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-5">
-               {[
+                {[
                  { id: 'linkedin', label: 'LinkedIn Username', icon: Linkedin },
                  { id: 'twitter', label: 'Twitter Handle', icon: Twitter },
                  { id: 'reddit', label: 'Reddit Username', icon: Search },
                  { id: 'stackoverflow', label: 'StackOverflow ID', icon: Code },
                  { id: 'instagram', label: 'Instagram Handle', icon: Palette },
                  { id: 'youtube', label: 'YouTube Channel', icon: Cpu },
+                 { id: 'leetcode', label: 'LeetCode Username', icon: Star },
+                 { id: 'codeforces', label: 'Codeforces Handle', icon: BarChart3 },
                ].map(social => (
                  <div key={social.id} className="space-y-2">
                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
@@ -203,6 +243,63 @@ const App: React.FC = () => {
             </div>
             <div className="mt-6 pt-6 border-t border-slate-800">
                <button onClick={() => setSocialDrawerOpen(false)} className="w-full py-4 bg-blue-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/30 transition-all active:scale-95">Save Changes</button>
+            </div>
+         </div>
+      </div>
+
+      {/* Skills Drawer */}
+      <div className={`fixed inset-y-0 right-0 w-80 z-50 transform ${skillsDrawerOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-500 ease-in-out border-l shadow-2xl ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+         <div className="p-8 h-full flex flex-col">
+            <div className="flex items-center justify-between mb-8">
+               <h3 className="text-xl font-black flex items-center gap-2"><Code className="text-emerald-500" /> Tech Stack</h3>
+               <button onClick={() => setSkillsDrawerOpen(false)} className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"><X size={24} /></button>
+            </div>
+            <div className="mb-4">
+               <div className={`flex items-center gap-2 px-4 py-3 rounded-2xl border transition-all ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
+                  <Search size={16} className="text-slate-400" />
+                  <input
+                     value={skillSearch}
+                     onChange={(e) => setSkillSearch(e.target.value)}
+                     placeholder="Search skills..."
+                     className={`flex-1 bg-transparent outline-none text-sm ${isDark ? 'text-white placeholder-slate-500' : 'text-slate-900 placeholder-slate-400'}`}
+                  />
+               </div>
+            </div>
+            {profileData.skills.length > 0 && (
+               <div className="mb-4 flex flex-wrap gap-2">
+                  {profileData.skills.map(skill => (
+                     <button
+                        key={skill}
+                        onClick={() => toggleSkill(skill)}
+                        className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-1"
+                     >
+                        {skill} <X size={12} />
+                     </button>
+                  ))}
+               </div>
+            )}
+            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+               <div className="grid grid-cols-2 gap-2">
+                  {filteredSkills.map(skill => {
+                     const isSelected = profileData.skills.includes(skill);
+                     return (
+                        <button
+                           key={skill}
+                           onClick={() => toggleSkill(skill)}
+                           className={`px-3 py-2.5 rounded-xl text-xs font-bold border transition-all ${
+                              isSelected
+                                 ? 'bg-blue-600 border-blue-600 text-white'
+                                 : (isDark ? 'bg-slate-800 border-slate-700 text-slate-400 hover:border-blue-500 hover:text-blue-400' : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-blue-500 hover:text-blue-600')
+                           }`}
+                        >
+                           {skill}
+                        </button>
+                     );
+                  })}
+               </div>
+            </div>
+            <div className="mt-6 pt-6 border-t border-slate-800">
+               <button onClick={() => setSkillsDrawerOpen(false)} className="w-full py-4 bg-blue-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/30 transition-all active:scale-95">Save Changes</button>
             </div>
          </div>
       </div>
@@ -289,6 +386,88 @@ const App: React.FC = () => {
                           </button>
                         ))}
                       </div>
+                  </section>
+
+                  {/* Competitive Programming Stats */}
+                  <section className="space-y-4">
+                     <div className="flex items-center gap-3">
+                        <div className="p-2 bg-amber-500/10 rounded-xl text-amber-500"><Star size={20} /></div>
+                        <h3 className="text-xl font-black">CP Stats</h3>
+                     </div>
+
+                     {/* LeetCode Stats */}
+                     {profileData.leetcode && (
+                        <div className={`rounded-3xl border p-6 space-y-4 ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
+                           <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                 <span className="text-sm font-black text-amber-500">LeetCode</span>
+                                 <span className="text-[10px] font-bold text-slate-400">@{profileData.leetcode}</span>
+                              </div>
+                              <button onClick={fetchLcStats} disabled={lcLoading} className="text-xs font-bold text-blue-500 hover:text-blue-600 transition-colors">
+                                 {lcLoading ? '...' : 'Refresh'}
+                              </button>
+                           </div>
+                           {lcStats ? (
+                              <div className="grid grid-cols-3 gap-3">
+                                 <div className="text-center p-3 rounded-2xl bg-emerald-500/10">
+                                    <div className="text-lg font-black text-emerald-500">{lcStats.totalSolved}</div>
+                                    <div className="text-[10px] font-bold text-slate-400 uppercase">Solved</div>
+                                 </div>
+                                 <div className="text-center p-3 rounded-2xl bg-blue-500/10">
+                                    <div className="text-lg font-black text-blue-500">#{lcStats.ranking.toLocaleString()}</div>
+                                    <div className="text-[10px] font-bold text-slate-400 uppercase">Rank</div>
+                                 </div>
+                                 <div className="text-center p-3 rounded-2xl bg-rose-500/10">
+                                    <div className="text-lg font-black text-rose-500">{lcStats.hardSolved}</div>
+                                    <div className="text-[10px] font-bold text-slate-400 uppercase">Hard</div>
+                                 </div>
+                              </div>
+                           ) : (
+                              <div className="text-center py-4 text-sm text-slate-400">
+                                 {lcLoading ? 'Fetching stats...' : 'No stats loaded'}
+                              </div>
+                           )}
+                        </div>
+                     )}
+
+                     {/* Codeforces Stats */}
+                     {profileData.codeforces && (
+                        <div className={`rounded-3xl border p-6 space-y-4 ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
+                           <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                 <span className="text-sm font-black text-blue-400">Codeforces</span>
+                                 <span className="text-[10px] font-bold text-slate-400">@{profileData.codeforces}</span>
+                              </div>
+                              <button onClick={fetchCfStats} disabled={cfLoading} className="text-xs font-bold text-blue-500 hover:text-blue-600 transition-colors">
+                                 {cfLoading ? '...' : 'Refresh'}
+                              </button>
+                           </div>
+                           {cfStats ? (
+                              <div className="grid grid-cols-3 gap-3">
+                                 <div className="text-center p-3 rounded-2xl bg-blue-500/10">
+                                    <div className="text-lg font-black text-blue-500">{cfStats.rating}</div>
+                                    <div className="text-[10px] font-bold text-slate-400 uppercase">Rating</div>
+                                 </div>
+                                 <div className="text-center p-3 rounded-2xl bg-purple-500/10">
+                                    <div className="text-lg font-black text-purple-500 capitalize">{cfStats.rank}</div>
+                                    <div className="text-[10px] font-bold text-slate-400 uppercase">Rank</div>
+                                 </div>
+                                 <div className="text-center p-3 rounded-2xl bg-emerald-500/10">
+                                    <div className="text-lg font-black text-emerald-500">{cfStats.totalSolved}</div>
+                                    <div className="text-[10px] font-bold text-slate-400 uppercase">Solved</div>
+                                 </div>
+                              </div>
+                           ) : (
+                              <div className="text-center py-4 text-sm text-slate-400">
+                                 {cfLoading ? 'Fetching stats...' : 'No stats loaded'}
+                              </div>
+                           )}
+                        </div>
+                     )}
+
+                     {!profileData.leetcode && !profileData.codeforces && (
+                        <p className="text-xs text-slate-400 text-center py-2">Add usernames in Socials to see CP stats</p>
+                     )}
                   </section>
                 </div>
               </div>

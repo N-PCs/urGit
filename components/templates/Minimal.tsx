@@ -42,7 +42,7 @@ ${data.bio}
 <br/>
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true" />
+  <img src="https://github-readme-stats-fast.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true" />
 </p>
 
 <br/>

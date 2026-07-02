@@ -65,8 +65,8 @@ export const StandardPreview: React.FC<PreviewProps> = ({ profileData, githubSta
 
         {profileData.showStats && (
           <div className="space-y-4">
-            <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" className="w-full" />
-            <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" className="w-full" />
+            <img src={`https://github-readme-stats-fast.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" className="w-full" />
+            <img src={`https://github-readme-stats-fast.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" className="w-full" />
           </div>
         )}
       </div>
@@ -79,19 +79,10 @@ export const StandardPreview: React.FC<PreviewProps> = ({ profileData, githubSta
       </div>
 
       <div className="flex flex-col gap-6">
-        {profileData.showTrophies && (
-          <div className="flex justify-center">
-            <img 
-              src={`https://github-profile-trophy.vercel.app/?username=${profileData.github}&theme=${profileData.statsTheme}&no-frame=true&column=7`} 
-              alt="Trophies" 
-              className="max-w-full"
-            />
-          </div>
-        )}
         {profileData.showStreak && (
           <div className="flex justify-center">
             <img 
-              src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} 
+              src={`https://streak-stats.demolab.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} 
               alt="GitHub Streak" 
               className="max-w-full"
             />
@@ -132,8 +123,8 @@ export const MinimalPreview: React.FC<PreviewProps> = ({ profileData, githubStat
        
        {profileData.showStats && (
          <div className="space-y-4 pt-4">
-           <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" />
-           <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" />
+           <img src={`https://github-readme-stats-fast.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" />
+           <img src={`https://github-readme-stats-fast.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" />
          </div>
        )}
     </div>
@@ -193,19 +184,10 @@ export const StatsHeavyPreview: React.FC<PreviewProps> = ({ profileData, githubS
       </>
     )}
 
-    {profileData.showTrophies && (
-      <div className="flex justify-center py-6">
-        <img 
-          src={`https://github-profile-trophy.vercel.app/?username=${profileData.github}&theme=${profileData.statsTheme}&no-frame=true&column=7`} 
-          alt="Trophies" 
-        />
-      </div>
-    )}
-
     {profileData.showStreak && (
       <div className="flex justify-center py-6">
         <img 
-          src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} 
+          src={`https://streak-stats.demolab.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} 
           alt="GitHub Streak" 
         />
       </div>
@@ -244,14 +226,14 @@ export const CreativePreview: React.FC<PreviewProps> = ({ profileData, githubSta
       {profileData.showStats && (
         <div className="space-y-8 pt-8">
           <div className="flex justify-center gap-4 flex-wrap">
-            <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="GitHub Stats" />
+            <img src={`https://github-readme-stats-fast.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="GitHub Stats" />
           </div>
         </div>
       )}
 
       {profileData.showStreak && (
         <div className="flex justify-center pt-8">
-          <img src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="GitHub Streak" />
+          <img src={`https://streak-stats.demolab.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="GitHub Streak" />
         </div>
       )}
   </div>
@@ -275,7 +257,7 @@ export const CompactPreview: React.FC<PreviewProps> = ({ profileData, githubStat
     
     {profileData.showStats && (
       <div className="mt-6 pt-6 border-t flex items-center justify-between" style={{ borderColor: `${theme.secondary}33` }}>
-         <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true&layout=compact`} alt="Stats" />
+         <img src={`https://github-readme-stats-fast.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true&layout=compact`} alt="Stats" />
       </div>
     )}
   </div>
@@ -307,8 +289,8 @@ export const AcademicPreview: React.FC<PreviewProps> = ({ profileData, githubSta
            
            {profileData.showStats && (
              <div className="space-y-4">
-                <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" className="w-full" />
-                <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" className="w-full" />
+                <img src={`https://github-readme-stats-fast.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" className="w-full" />
+                <img src={`https://github-readme-stats-fast.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" className="w-full" />
              </div>
            )}
         </div>
@@ -352,13 +334,13 @@ export const DeveloperPreview: React.FC<PreviewProps> = ({ profileData, githubSt
            {profileData.showStats && (
              <div className="p-8 rounded-[2rem] border" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
                 <h3 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2"><BarChart3 size={16}/> Performance</h3>
-                <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" className="w-full" />
-                <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" className="w-full mt-4" />
+                <img src={`https://github-readme-stats-fast.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" className="w-full" />
+                <img src={`https://github-readme-stats-fast.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" className="w-full mt-4" />
              </div>
            )}
            {profileData.showStreak && (
               <div className="p-8 rounded-[2rem] border border-dashed text-center" style={{ borderColor: `${theme.secondary}33` }}>
-                 <img src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="Streak" className="w-full" />
+                 <img src={`https://streak-stats.demolab.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="Streak" className="w-full" />
               </div>
            )}
         </div>
@@ -388,21 +370,16 @@ export const DarkElegantPreview: React.FC<PreviewProps> = ({ profileData, github
         
         {profileData.showStats && (
           <div className="flex flex-col items-center gap-6">
-            <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" />
-            <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" />
+            <img src={`https://github-readme-stats-fast.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" />
+            <img src={`https://github-readme-stats-fast.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" />
           </div>
         )}
         {profileData.showStreak && (
           <div className="flex justify-center">
-            <img src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="Streak" />
+            <img src={`https://streak-stats.demolab.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="Streak" />
           </div>
         )}
-        {profileData.showTrophies && (
-          <div className="flex justify-center">
-            <img src={`https://github-profile-trophy.vercel.app/?username=${profileData.github}&theme=${profileData.statsTheme}&no-frame=true&column=7`} alt="Trophies" />
-          </div>
-        )}
-     </div>
+      </div>
 
      <div className="mt-12">
         <SocialIcons data={profileData} />
@@ -455,21 +432,15 @@ export const CommunityPreview: React.FC<PreviewProps> = ({ profileData, githubSt
         {profileData.showStats && (
           <div className="p-8 rounded-[3rem] border flex flex-col items-center gap-6" style={{ borderColor: `${theme.secondary}33`, backgroundColor: `${theme.primary}05` }}>
              <h3 className="text-xs font-black uppercase tracking-widest mb-2">Git Influence</h3>
-             <img src={`https://github-readme-stats.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" />
-             <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" />
+             <img src={`https://github-readme-stats-fast.vercel.app/api?username=${profileData.github}&show_icons=true&theme=${profileData.statsTheme}&hide_border=true`} alt="Stats" />
+             <img src={`https://github-readme-stats-fast.vercel.app/api/top-langs/?username=${profileData.github}&layout=compact&theme=${profileData.statsTheme}&hide_border=true`} alt="Top Languages" />
           </div>
         )}
       </div>
 
-      {profileData.showTrophies && (
-        <div className="flex justify-center py-8">
-           <img src={`https://github-profile-trophy.vercel.app/?username=${profileData.github}&theme=${profileData.statsTheme}&no-frame=true&column=7`} alt="Trophies" />
-        </div>
-      )}
-
       {profileData.showStreak && (
         <div className="flex justify-center py-8">
-           <img src={`https://github-readme-streak-stats.herokuapp.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="Streak" />
+           <img src={`https://streak-stats.demolab.com/?user=${profileData.github}&theme=${profileData.statsTheme}&hide_border=true`} alt="Streak" />
         </div>
       )}
 

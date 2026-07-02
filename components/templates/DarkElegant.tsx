@@ -32,15 +32,13 @@ ${getSkillsBadge(data.skills, 'center').replace('<p align="center">', '').replac
   <tr>
     <td align="center">
       <h3>📊 ANALYTIC SYMMETRY</h3>
-      <img src="https://github-readme-stats.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true" />
+      <img src="https://github-readme-stats-fast.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true" />
     </td>
   </tr>
 </table>
 
 <p align="center">
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=${data.github}&theme=${data.statsTheme}&hide_border=true" />
-<br/>
-<img src="https://github-profile-trophy.vercel.app/?username=${data.github}&theme=${data.statsTheme}&no-frame=true&column=7" />
+<img src="https://streak-stats.demolab.com/?user=${data.github}&theme=${data.statsTheme}&hide_border=true" />
 </p>
 
 <br/>

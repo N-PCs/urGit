@@ -23,9 +23,7 @@ ${data.bio}
       ### 🏆 Impact & Achievements
       <i>"Building for the many, sharing with all."</i>
       <br/><br/>
-      <img src="https://github-profile-trophy.vercel.app/?username=${data.github}&theme=${data.statsTheme}&no-frame=true&column=4" />
-      <br/>
-      <img src="https://github-readme-streak-stats.herokuapp.com/?user=${data.github}&theme=${data.statsTheme}&hide_border=true" />
+      <img src="https://streak-stats.demolab.com/?user=${data.github}&theme=${data.statsTheme}&hide_border=true" />
     </td>
     <td width="40%" valign="top">
       ### 🛠 Technical Universe
@@ -45,7 +43,7 @@ ${data.bio}
 
 ### 📊 Global Contribution Metrics
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true" />
+  <img src="https://github-readme-stats-fast.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true" />
 </p>
 
 <br/>

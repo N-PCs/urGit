@@ -38,6 +38,8 @@ export const INITIAL_PROFILE_DATA: ProfileData = {
   stackoverflow: '',
   instagram: '',
   youtube: '',
+  leetcode: '',
+  codeforces: '',
   skills: ['cpp', 'py', 'html', 'css', 'js', 'mysql', 'vscode', 'github', 'git', 'typescript', 'react', 'tailwind'],
   currentWork: 'urGit - GitHub Profile Builder',
   learning: 'Distributed Systems & Web3',

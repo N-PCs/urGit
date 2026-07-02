@@ -44,13 +44,11 @@ ${data.bio}
 
 <h3 align="center">📊 GitHub Powerups</h3>
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true" width="48%" />
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=${data.github}&theme=${data.statsTheme}&hide_border=true" width="48%" />
+  <img src="https://github-readme-stats-fast.vercel.app/api?username=${data.github}&show_icons=true&theme=${data.statsTheme}&hide_border=true" width="48%" />
+  <img src="https://streak-stats.demolab.com/?user=${data.github}&theme=${data.statsTheme}&hide_border=true" width="48%" />
 </p>
 
-<p align="center">
-${data.showTrophies ? `<img src="https://github-profile-trophy.vercel.app/?username=${data.github}&theme=${data.statsTheme}&no-frame=true&column=7" />` : ''}
-</p>
+
 
 <br/>
 <p align="center">
